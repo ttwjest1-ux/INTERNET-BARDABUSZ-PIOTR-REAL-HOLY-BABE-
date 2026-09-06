@@ -1,0 +1,67 @@
+<section class="pakiety">
+  <h2>BARDABUSZ PIOTR REAL HOLY BABE INTERNET</h2>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>🇵🇱 POLSKA • 🇬🇧 ANGLIA • 🇩🇪 NIEMCY</h3>
+      <div class="price">20,02 zł</div>
+      <p>miesięcznie</p>
+      <button>WYBIERAM</button>
+    </div>
+
+    <div class="card">
+      <h3>🇯🇵 JAPONIA • 🇨🇳 CHINY • 🇷🇺 ROSJA</h3>
+      <div class="price">49,07 zł</div>
+      <p>miesięcznie</p>
+      <button>WYBIERAM</button>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.pakiety {
+  text-align: center;
+  padding: 40px 15px;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 280px;
+  padding: 25px;
+  border-radius: 20px;
+  background: rgba(0,0,0,.75);
+  border: 2px solid #00ffff;
+  box-shadow: 0 0 20px #00ffff;
+  color: white;
+}
+
+.card h3 {
+  font-size: 18px;
+}
+
+.price {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 20px 0 5px;
+}
+
+.card p {
+  margin-bottom: 20px;
+}
+
+.card button {
+  padding: 12px 25px;
+  border: 0;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+}
+</style>
