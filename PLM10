@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080812">
+<title>PLM10</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #050509;
+  color: white;
+}
+
+.app {
+  max-width: 430px;
+  min-height: 100vh;
+  margin: auto;
+  padding: 24px 20px;
+  background: linear-gradient(180deg, #10102a, #050509);
+}
+
+.logo {
+  text-align: center;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  color: #00eaff;
+  text-shadow: 0 0 18px #00eaff;
+  margin-top: 15px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #aaa;
+  font-size: 13px;
+  letter-spacing: 2px;
+  margin: 8px 0 35px;
+}
+
+.menu {
+  display: grid;
+  gap: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 22px 18px;
+  border: 1px solid #00eaff;
+  border-radius: 18px;
+  background: rgba(0,234,255,.08);
+  color: white;
+  font-size: 19px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 16px rgba(0,234,255,.18);
+  transition: .2s;
+}
+
+button:hover {
+  transform: scale(1.02);
+  background: rgba(0,234,255,.16);
+  box-shadow: 0 0 26px rgba(0,234,255,.35);
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+.icon {
+  display: block;
+  font-size: 31px;
+  margin-bottom: 7px;
+}
+
+.card {
+  padding: 25px 20px;
+  border-radius: 22px;
+  border: 1px solid #00eaff;
+  background: linear-gradient(135deg, #171747, #08081a);
+  box-shadow: 0 0 25px rgba(0,234,255,.22);
+  margin: 20px 0;
+}
+
+.back {
+  margin-top: 10px;
+}
+
+.status {
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  margin-top: 35px;
+}
+
+.address {
+  word-break: break-all;
+  font-size: 13px;
+  color: #00eaff;
+  margin-top: 12px;
+}
+
+.footer {
+  text-align: center;
+  color: #555;
+  font-size: 11px;
+  margin-top: 35px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app" id="app">
+
+  <div class="logo">PLM10</div>
+
+  <div class="subtitle">
+    PIOTR B. DIGITAL
+  </div>
+
+  <div class="menu">
+
+    <button id="walletButton" onclick="openWallet()">
+      <span class="icon">👛</span>
+      PIOTR B. WALLET
+    </button>
+
+    <button onclick="openCards()">
+      <span class="icon">💳</span>
+      KARTY
+    </button>
+
+    <button onclick="openCrypto()">
+      <span class="icon">🪙</span>
+      PLM CRYPTO
+    </button>
+
+    <button onclick="openPrice()">
+      <span class="icon">💰</span>
+      CENA PLM
+    </button>
+
+  </div>
+
+  <div class="footer">
+    PLM10 • SYSTEM
+  </div>
+
+</div>
+
+<script>
+
+/* =========================
+   PIOTR B. WALLET
+   ========================= */
+
+async function openWallet() {
+
+  if (!window.ethereum) {
+    alert(
+      "Nie znaleziono portfela Web3. " +
+      "Otwórz PLM10 w przeglądarce obsługującej MetaMask."
+    );
+    return;
+  }
+
+  const button = document.getElementById("walletButton");
+
+  try {
+
+    button.disabled = true;
+
+    button.innerHTML = `
+      <span class="icon">🔄</span>
+      ŁĄCZENIE...
+    `;
+
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts"
+    });
+
+    if (!accounts || accounts.length === 0) {
+      throw new Error("Brak konta");
+    }
+
+    showConnectedWallet(accounts[0]);
+
+  } catch (error) {
+
+    console.error(error);
+
+    button.innerHTML = `
+      <span class="icon">👛</span>
+      PIOTR B. WALLET
+    `;
+
+    alert("Połączenie z portfelem zostało anulowane lub nie powiodło się.");
+
+  } finally {
+
+    button.disabled = false;
+
+  }
+}
+
+
+/* =========================
+   POKAŻ PODŁĄCZONY PORTFEL
+   ========================= */
+
+function showConnectedWallet(address) {
+
+  const button = document.getElementById("walletButton");
+
+  const shortAddress =
+    address.slice(0, 6) +
+    "..." +
+    address.slice(-4);
+
+  button.innerHTML = `
+    <span class="icon">🟢</span>
+    ${shortAddress}
+  `;
+
+  button.title = address;
+}
+
+
+/* =========================
+   ZMIANA KONTA W METAMASK
+   ========================= */
+
+if (window.ethereum) {
+
+  window.ethereum.on("accountsChanged", function(accounts) {
+
+    const button = document.getElementById("walletButton");
+
+    if (!accounts || accounts.length === 0) {
+
+      button.innerHTML = `
+        <span class="icon">👛</span>
+        PIOTR B. WALLET
+      `;
+
+      button.title = "";
+
+    } else {
+
+      showConnectedWallet(accounts[0]);
+
+    }
+
+  });
+
+}
+
+
+/* =========================
+   KARTY
+   ========================= */
+
+function openCards() {
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="logo">
+      💳
+    </div>
+
+    <div class="subtitle">
+      PLM10 CARD
+    </div>
+
+    <div class="card">
+
+      <div style="color:#aaa;font-size:13px;">
+        PIOTR B.
+      </div>
+
+      <div style="
+        font-size:23px;
+        letter-spacing:4px;
+        margin:40px 0 25px;
+      ">
+        •••• •••• •••• 0000
+      </div>
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        font-size:13px;
+      ">
+        <span>PLM10 CARD</span>
+        <span>💳</span>
+      </div>
+
+    </div>
+
+    <button onclick="addCard()">
+      ➕ DODAJ KARTĘ
+    </button>
+
+    <button class="back" onclick="goHome()">
+      ← POWRÓT
+    </button>
+
+  `;
+}
+
+
+/* =========================
+   DODAJ KARTĘ
+   ========================= */
+
+function addCard() {
+
+  alert(
+    "Dodawanie prawdziwej karty płatniczej " +
+    "będzie wymagało podłączenia bezpiecznego operatora płatności."
+  );
+
+}
+
+
+/* =========================
+   PLM CRYPTO
+   ========================= */
+
+function openCrypto() {
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="logo">
+      PLM
+    </div>
+
+    <div class="subtitle">
+      PLM CRYPTO
+    </div>
+
+    <div class="card">
+
+      <div style="
+        color:#aaa;
+        font-size:14px;
+      ">
+        SALDO PLM
+      </div>
+
+      <div style="
+        font-size:40px;
+        font-weight:bold;
+        margin:15px 0;
+      ">
+        0 PLM
+      </div>
+
+      <div style="
+        color:#777;
+        font-size:13px;
+      ">
+        Token PLM — dane rzeczywiste
+        zostaną podłączone po ustaleniu
+        sieci blockchain i kontraktu.
+      </div>
+
+    </div>
+
+    <button onclick="goHome()">
+      ← POWRÓT
+    </button>
+
+  `;
+
+}
+
+
+/* =========================
+   CENA PLM
+   ========================= */
+
+function openPrice() {
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="logo">
+      💰
+    </div>
+
+    <div class="subtitle">
+      CENA PLM
+    </div>
+
+    <div class="card">
+
+      <div style="
+        color:#aaa;
+        font-size:14px;
+      ">
+        AKTUALNA CENA
+      </div>
+
+      <div style="
+        font-size:38px;
+        font-weight:bold;
+        margin:15px 0;
+      ">
+        TO COME
+      </div>
+
+      <div style="color:#777;">
+        Brak podłączonego źródła
+        rzeczywistej ceny PLM.
+      </div>
+
+    </div>
+
+    <button onclick="goHome()">
+      ← POWRÓT
+    </button>
+
+  `;
+
+}
+
+
+/* =========================
+   POWRÓT DO MENU
+   ========================= */
+
+function goHome() {
+
+  location.reload();
+
+}
+
+</script>
+
+</body>
+</html>
+
+To jest cały plik. Nie dokładaj już do niego poprzednich fragmentów — usuń starą zawartość "index.html" i wklej ten kod w całości. 🔥
+
+Po zapisaniu masz menu PLM10 → PIOTR B. WALLET / KARTY / PLM CRYPTO / CENA PLM.
